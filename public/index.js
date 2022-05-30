@@ -84,7 +84,7 @@ function initProgram() {
 	// Initiate Meshes
 	const sphere = new THREE.Mesh(new THREE.SphereGeometry(1), new THREE.MeshStandardMaterial({ color: 0x00ffff }));
 	sphere.name = 'sphere';
-	sphere.position.set(0, 0, 0);
+	sphere.position.set(-3, 0, 0);
 	sphere.castShadow = true;
 	scene.add(sphere);
 	

@@ -2,11 +2,15 @@
 <head>
 	<title>Latihan ThreeJS</title>
 	<style>
+		* {
+			font-family: inherit;
+			margin: 0;
+		}
 		html, body {
 			overflow: hidden;
-			margin: 0;
 			width: 100%;
 			height: 100%;
+			font-family: Verdana;
 		}
 		
 		#loading-screen {
@@ -41,17 +45,38 @@
 		#load-progress {
 			background-color: red;
 			height: 100%;
-			transition: 0.3s transform;
+			transition: 0.5s transform;
 		}
 		
 		#orbitTarget {
 			z-index: 6;
+			width: 100vw;
+			text-align: center;
 			position: absolute;
 			top: 8px;
-			left: 45vw;
-			padding: 0 6px;
+			left: 0;
+		}
+		
+		#orbitText {
+			display: inline-block;
+		}
+		
+		#buttonList {
+			position: absolute;
+			left: 6px;
+			bottom: 6px;
 			background-color: rgba(0.5, 0.5, 0.5, 0.5);
-			border-radius: 4px
+			border-radius: 4px;
+			padding: 4px 12px;
+			display: flex;
+		}
+		
+		.card {
+			color: white;
+			background-color: rgba(0.2, 0.2, 0.2, 0.5);
+			padding: 6px 6px;
+			margin: 0 12px;
+			border-radius: 4px;
 		}
 		
 		.fade-out {
@@ -61,7 +86,12 @@
 </head>
 <body>
 	<section id="orbitTarget" style="display: none">
-		<h3 id="orbitText" style="color: white">Target: None</h3>
+		<h3 id="orbitText" class="card" style="color: white">Target: None</h3>
+	</section>
+	<section id="buttonList">
+		<div class="card">
+			<h4 id="xButton">X (Change Camera)</h4>
+		</div>
 	</section>
 	<section id="loading-screen">
 		<h1 id="loading-title">Loading</h1>
