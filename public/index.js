@@ -1,9 +1,10 @@
 import * as THREE from '/three/build/three.module.js';
+import {OrbitControls} from '/three/examples/jsm/controls/OrbitControls.js';
 import {FlyControls} from '/three/examples/jsm/controls/FlyControls.js';
 import {GLTFLoader} from '/three/examples/jsm/loaders/GLTFLoader.js';
 
-let clock, activeScene, activeCamera, renderer, gltfLoader;
-let cameras;
+let clock, activeScene, activeCamera, activeControl, renderer, gltfLoader;
+let cameras, camIndex;
 let sunLight;
 let ambientLight;
 let loadingLoader;
@@ -12,6 +13,15 @@ let loadingLoader;
 let terrain;
 let skydome;
 let warehouse;
+
+// Loading variables
+let finishLoading = false;
+
+// Camera Variables
+let cameraMode = 0; // 0 = Fly, 1 = Orbit
+let cycleMesh = 0;
+let flyControl;
+let orbitControl;
 
 initProgram();
 animate();
@@ -31,13 +41,14 @@ function initProgram() {
 	camera.position.set(0, 0, 5);
 	camera.lookAt(0, 0, 0);
 	cameras.push(camera);
+	activeCamera = camera;
+	camIndex = 0;
 	
 	camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 500);
 	camera.name = 'sideCamera';
 	camera.position.set(5, 0, 0);
 	camera.lookAt(0, 0, 0);
 	cameras.push(camera);
-	activeCamera = camera;
 	
 	// Initiate renderer
 	renderer = new THREE.WebGLRenderer({ antialiased: true });
@@ -92,6 +103,7 @@ function initProgram() {
 			loadingScreen.addEventListener('transitionend', (event) => {
 				event.target.remove();
 			});
+			finishLoading = true;
 		}
 	});
 	
@@ -128,29 +140,52 @@ function initProgram() {
 	});
 
 	gltfLoader.load('/models/warehouse/scene.gltf', (gltf) => {
-		console.log(gltf.scene.children[0].children[0], "Warehouse");
+		// console.log(gltf.scene.children[0].children[0], "Warehouse");
 		
 		warehouse = gltf.scene;
 		warehouse.scale.set(0.01, 0.01, 0.01);
-		warehouse.position.set(0, -1.02, -5);
+		warehouse.position.set(0, -1.04, -5);
 		warehouse.children[0].children[0].children.forEach((obj) => {
 			obj.castShadow = true;
 			obj.receiveShadow = true;
 		});
-		skydome.name = 'warehouse';
-		// console.log(skydome.material);
+		warehouse.name = 'warehouse';
+		console.log(warehouse);
 		
 		scene.add(warehouse);
 	}, undefined, (err) => {
 		console.error(err);
 	});
+	
+	// Initiate Controls
+	changeToFly();
 }
 
-const controls = new FlyControls(activeCamera, renderer.domElement);
-controls.dragToLook = true;
-controls.rollSpeed = 0.25;
-controls.movementSpeed = 2.5;
-controls.update(clock.getDelta());
+// Change to fly control mode
+function changeToFly() {
+	if (orbitControl) orbitControl.dispose();
+	
+	flyControl = new FlyControls(activeCamera, renderer.domElement);
+	flyControl.rollSpeed = 0.4;
+	flyControl.movementSpeed = 2.5;
+	flyControl.dragToLook = true;
+	flyControl.update(clock.getDelta());
+}
+
+function changeToOrbit() {
+	if (flyControl) flyControl.dispose();
+	
+	orbitControl = new OrbitControls(activeCamera, renderer.domElement);
+	orbitControl.update();
+}
+
+// Resize Canvas on window
+window.addEventListener('resize', () => {
+	activeCamera.aspect = window.innerWidth / window.innerHeight;
+	activeCamera.updateProjectionMatrix();
+
+	renderer.setSize( window.innerWidth, window.innerHeight );
+});
 
 // Timer to update things differently rather than update based on frames
 const timer = setInterval(() => {
@@ -163,7 +198,50 @@ const timer = setInterval(() => {
 
 function animate() {
 	renderer.setAnimationLoop(() => {
-		controls.update(clock.getDelta());
+		if (flyControl) flyControl.update(clock.getDelta());
+		else if (orbitControl) orbitControl.update(clock.getDelta());
 		renderer.render(activeScene, activeCamera);
 	});
 }
+
+// Document Events
+const body = document.querySelector('body');
+body.addEventListener('keypress', (event) => {
+	console.log(event);
+	
+	const orbitTarget = document.querySelector('#orbitTarget');
+	const orbitText = document.querySelector('#orbitText');
+	
+	if (event.key === 'x') {
+		// if fly, change to orbit
+		if (cameraMode === 0) {
+			changeToOrbit();
+			cameraMode = 1;
+			orbitTarget.style.display = 'block';
+			orbitText.innerText = 'Target: center';
+		}
+		// If orbit, cycle through meshes after that change to fly
+		else if (cameraMode === 1) {
+			let isValid = false;
+			while (cameraMode === 1 && !isValid) {
+				cycleMesh++;
+				// console.log(cycleMesh);
+				
+				if (cycleMesh === activeScene.children.length) {
+					cycleMesh = 0;
+					cameraMode = 0;
+					orbitTarget.style.display = 'none';
+				}
+				else if ('type' in activeScene.children[cycleMesh]){
+					if (activeScene.children[cycleMesh].type === 'Mesh' || activeScene.children[cycleMesh].type === 'Group') isValid = true
+				}
+			}
+			
+			if (cameraMode === 0) changeToFly();
+			else if (isValid) {
+				orbitControl.target = activeScene.children[cycleMesh].position;
+				orbitText.innerText = 'Target: ' + activeScene.children[cycleMesh].name;
+			}
+		}
+	}
+});

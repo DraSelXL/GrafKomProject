@@ -23,7 +23,7 @@
 		#loading-title {
 			text-align: center;
 			color: white;
-			margin-top: 35%;
+			margin-top: 35vh;
 		}
 		
 		#loader {
@@ -44,12 +44,25 @@
 			transition: 0.3s transform;
 		}
 		
+		#orbitTarget {
+			z-index: 6;
+			position: absolute;
+			top: 8px;
+			left: 45vw;
+			padding: 0 6px;
+			background-color: rgba(0.5, 0.5, 0.5, 0.5);
+			border-radius: 4px
+		}
+		
 		.fade-out {
 			opacity: 0;
 		}
 	</style>
 </head>
 <body>
+	<section id="orbitTarget" style="display: none">
+		<h3 id="orbitText" style="color: white">Target: None</h3>
+	</section>
 	<section id="loading-screen">
 		<h1 id="loading-title">Loading</h1>
 		<div id="loader">
