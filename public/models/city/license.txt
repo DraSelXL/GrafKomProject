@@ -1,0 +1,11 @@
+Model Information:
+* title:	Tiny City
+* source:	https://sketchfab.com/3d-models/tiny-city-760bdaa6a6fd4259907fce9c19c4c934
+* author:	Matheus Dalla (https://sketchfab.com/desenholdb)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Tiny City" (https://sketchfab.com/3d-models/tiny-city-760bdaa6a6fd4259907fce9c19c4c934) by Matheus Dalla (https://sketchfab.com/desenholdb) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

@@ -1,0 +1,11 @@
+Model Information:
+* title:	House01
+* source:	https://sketchfab.com/3d-models/house01-81c30d0378a14a57bcdde87b0a900b28
+* author:	Alok (https://sketchfab.com/alok.aks50)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "House01" (https://sketchfab.com/3d-models/house01-81c30d0378a14a57bcdde87b0a900b28) by Alok (https://sketchfab.com/alok.aks50) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

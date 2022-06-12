@@ -69,6 +69,21 @@
 			border-radius: 4px;
 			padding: 4px 12px;
 			display: flex;
+			z-index: 4;
+		}
+		
+		#mainCanvas {
+			position: absolute;
+			left: 0;
+			top: 0;
+			z-index: 1;
+		}
+		
+		#secondaryCanvas {
+			position: absolute;
+			right: 0;
+			bottom: 0;
+			z-index: 2;
 		}
 		
 		.card {
@@ -90,7 +105,13 @@
 	</section>
 	<section id="buttonList">
 		<div class="card">
-			<h4 id="xButton">X (Change Camera)</h4>
+			<h4 id="wasdButton">WASD (Move Camera)</h4>
+		</div>
+		<div class="card">
+			<h4 id="cButton">C (Change Camera)</h4>
+		</div>
+		<div class="card">
+			<h4 id="vButton">V (Change View)</h4>
 		</div>
 	</section>
 	<section id="loading-screen">
@@ -98,7 +119,10 @@
 		<div id="loader">
 			<div id="load-progress" style="width: 0%;"></div>
 		</div>
+		<h1 id="loading-error" style="display: none">Error Loading Assets</h1>
 	</section>
+	<canvas id="mainCanvas"></canvas>
+	<canvas id="secondaryCanvas"></canvas>
 	<script type="module" src="/index.js"></script>
 </body>
 </html>
