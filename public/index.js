@@ -217,8 +217,8 @@ function init() {
 			objectList[loadIndex].scene = gltf.scene;
 			objectList[loadIndex].animations = gltf.animations || null;
 			objectList[loadIndex].name = 'house' + (i+1);
-			objectList[i].scene.position.set(objectPlacementX[i], 0, objectPlacementZ[i]);
-			objectList[i].scene.rotation.y = objectRotationY[i] * Math.PI/180;
+			objectList[loadIndex].scene.position.set(objectPlacementX[i], 0, objectPlacementZ[i]);
+			objectList[loadIndex].scene.rotation.y = objectRotationY[i] * Math.PI/180;
 			// console.log(Math.PI + i/maxHouse * Math.PI * 2);
 			objectList[loadIndex].scene.scale.set(1.8, 1.8, 1.8);
 			
