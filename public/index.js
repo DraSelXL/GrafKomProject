@@ -22,10 +22,14 @@ let cameras = [], scenes = [], renderers = [];
 // Canvases
 let mainCanvas, secondaryCanvas;
 
+// GUI
+let orbitTargetUI, orbitModeUI;
+let orbitTargetTextUI, orbitModeTextUI;
+
 // Control
 let controls = {
 	active: null,
-	type: 0,
+	type: ControlTypes.FLY,
 	orbitIndex: 0,
 	orbitException: []
 };
@@ -132,7 +136,7 @@ function init() {
 	directionalLight.shadow.camera.far = 100;
 	scenes[0].add(directionalLight);
 	
-	controls.orbitException.push('sunLight'); // Add to the exception of orbiting
+	controls.orbitException.push('ambientLight'); // Add to the exception of orbiting
 	ambientLight = new THREE.AmbientLight(new THREE.Color('#FFFFFF'), 0.2);
 	ambientLight.name = 'ambientLight';
 	scenes[0].add(ambientLight);
@@ -166,63 +170,74 @@ function init() {
 	gltfLoader = new GLTFLoader(loadingManager);
 	
 	// Load the terrain
-	objectList.unshift({});
+	let loadCounter = 0;
+	objectList.push({});
 	gltfLoader.load('models/terrain/terrain.glb', (glb) => {
+		const loadIndex = loadCounter++;
 		// console.log(glb, 'terrain');
 		controls.orbitException.push('terrain'); // Add to the exception of orbiting
 
-		objectList[0].scene = glb.scene;
-		objectList[0].name = 'terrain';
-		objectList[0].scene.position.set(0, -0.04, 0);
-		objectList[0].scene.scale.set(5, 5, 5);
-		objectList[0].scene.receiveShadow = true;
+		objectList[loadIndex].scene = glb.scene;
+		objectList[loadIndex].name = 'terrain';
+		objectList[loadIndex].scene.position.set(0, -0.04, 0);
+		objectList[loadIndex].scene.scale.set(5, 5, 5);
+		objectList[loadIndex].scene.receiveShadow = true;
 		
-		loopShadow(objectList[0].scene.children, ShadowConstants.RECEIVE_SHADOW);
+		loopShadow(objectList[loadIndex].scene.children, ShadowConstants.RECEIVE_SHADOW);
 		
-		scenes[0].add(objectList[0].scene.children[0]);
+		scenes[0].add(objectList[loadIndex].scene.children[0]);
 	});
 	
 	// Load the cop
-	objectList.unshift({});
+	objectList.push({});
 	gltfLoader.load('models/cop/scene.gltf', (gltf) => {
-		objectList[0].scene = gltf.scene;
-		objectList[0].animations = gltf.animations;
-		objectList[0].name = 'cop';
-		objectList[0].scene.castShadow = true;
-		objectList[0].scene.receiveShadow = true;
+		const loadIndex = loadCounter++;
+		objectList[loadIndex].scene = gltf.scene;
+		objectList[loadIndex].animations = gltf.animations;
+		objectList[loadIndex].name = 'cop';
+		objectList[loadIndex].scene.castShadow = true;
+		objectList[loadIndex].scene.receiveShadow = true;
 		
-		loopShadow(objectList[0].scene.children, ShadowConstants.CAST_RECEIVE);
+		loopShadow(objectList[loadIndex].scene.children, ShadowConstants.CAST_RECEIVE);
 		
-		scenes[0].add(objectList[0].scene);
+		scenes[0].add(objectList[loadIndex].scene);
 	});
 	
 	// Load the house a few times until maxHouse is reached in a round area
 	for (let i = 0; i < maxHouse; i++) {
-		objectList.unshift({});
+		objectList.push({});
 		
 		gltfLoader.load('models/house/scene.gltf', (gltf) => {
+			const loadIndex = loadCounter++;
 			// console.log(gltf, 'House' + i);
-			objectList[i].scene = gltf.scene;
-			objectList[i].animations = gltf.animations || null;
-			objectList[i].name = 'house' + (i+1);
-			objectList[i].scene.position.set(20 * Math.sin(180/maxHouse * i), 0, 20 * Math.cos(180/maxHouse * i));
-			objectList[i].scene.rotation.y = Math.PI + (Math.PI / maxHouse) * i;
+			objectList[loadIndex].scene = gltf.scene;
+			objectList[loadIndex].animations = gltf.animations || null;
+			objectList[loadIndex].name = 'house' + (i+1);
+			objectList[loadIndex].scene.position.set(20 * Math.sin(180/maxHouse * i), 0, 20 * Math.cos(180/maxHouse * i));
+			objectList[loadIndex].scene.rotation.y = Math.PI + (Math.PI / maxHouse) * i;
 			// console.log(Math.PI + i/maxHouse * Math.PI * 2);
-			objectList[i].scene.scale.set(1.8, 1.8, 1.8);
+			objectList[loadIndex].scene.scale.set(1.8, 1.8, 1.8);
 			
-			loopShadow(objectList[i].scene.children, ShadowConstants.CAST_RECEIVE);
+			loopShadow(objectList[loadIndex].scene.children, ShadowConstants.CAST_RECEIVE);
 			
-			scenes[0].add(objectList[i].scene);
+			scenes[0].add(objectList[loadIndex].scene);
 		});
 	}
 	
+	// Initiate the GUI
+	orbitTargetUI = document.querySelector('#orbitTarget');
+	orbitModeUI = document.querySelector('#orbitMode');
+	orbitTargetTextUI = orbitTarget.querySelector('#orbitText');
+	orbitModeTextUI = orbitMode.querySelector('#orbitModeText');
+	orbitModeUI.style.display = 'block';
+	
 	// Initiate the controls
-	EVENTS.changeToFly(controls, cameras, CameraIndex, renderers[0], clock);
+	changeToFly();
 	
 	// Register Events
 	EVENTS.resizeCanvasesEvent(renderers[0], renderers[1]);
-	EVENTS.switchCameraEvent(cameras, CameraIndex, controls, objectList);
-	EVENTS.switchControlEvent(controls, cameras, CameraIndex, renderers[0], clock);
+	EVENTS.switchCameraEvent(cameras, controls, CameraIndex, objectList);
+	switchControlEvent(controls, cameras, CameraIndex, renderers[0], clock);
 }
 
 // Set all children to be able to cast and receive shadow
@@ -242,6 +257,60 @@ function loopShadow(children, type) {
 	});
 }
 
+function changeToOrbit() {
+	// Change the control into orbit camera mode
+	if (controls.active) controls.active.dispose(); // Remove all resources for the control
+	
+	CameraIndex.active = cameras.length-1;
+	controls.active = new OrbitControls(cameras[CameraIndex.active], renderers[0].domElement);
+	controls.active.enablePan = false;	// Disable to enable manual position override of camera
+	controls.active.enableZoom = false; // Disable to enable manual position override of camera
+	controls.active.rollSpeed = 0.4;
+	controls.active.update();
+	controls.type = ControlTypes.ORBIT;
+	
+	EVENTS.orbitCameraPosition(cameras, CameraIndex, objectList, controls); // Set the camera position
+	
+	// Update the GUI
+	orbitModeTextUI.innerText = 'Mode: Orbit';
+	
+	orbitTargetUI.style.display = 'block';
+	orbitTargetTextUI.innerText = `Target: ${objectList[controls.orbitIndex].name}`;
+}
+
+function changeToFly() {
+	// Change the control into fly camera mode
+	if(controls.active) controls.active.dispose(); // Remove all resources for the control
+	
+	CameraIndex.active = (CameraIndex.next-1 < 0) ? CameraIndex.orbitIndex-1 : CameraIndex.next-1;
+	controls.active = new FlyControls(cameras[CameraIndex.active], renderers[0].domElement);
+	controls.active.movementSpeed = 2.5;
+	controls.active.dragToLook = true;
+	controls.active.rollSpeed = 0.4;
+	controls.active.update(clock.getDelta());
+	controls.type = ControlTypes.FLY;
+	
+	// Update the GUI
+	orbitModeTextUI.innerText = 'Mode: Fly';
+	orbitTargetUI.style.display = 'none';
+}
+
+// Switch the view into the orbital camera targeting an object
+// Use the ControlTypes Constants to compare the type of the control being used
+function switchControlEvent() {
+	window.addEventListener('keypress', (event) => {
+		// console.log(event);
+		if (event.key === 'v' || event.key === 'V') {
+			if (controls.type === ControlTypes.FLY) {
+				changeToOrbit();
+			}
+			else if (controls.type === ControlTypes.ORBIT) {
+				changeToFly();
+			}
+		}
+	});
+}
+
 function update() {
 	
 }
@@ -249,7 +318,13 @@ function update() {
 function animate() {
 	// main renderer
 	renderers[0].setAnimationLoop(() => {
-		if (controls.active) controls.active.update(clock.getDelta());
+		if (controls.active) {
+			if (controls.type === ControlTypes.ORBIT) {
+				
+			}
+			
+			controls.active.update(clock.getDelta());
+		}
 		
 		renderers[0].render(activeScene, cameras[CameraIndex.active]);
 	});
@@ -262,354 +337,3 @@ function animate() {
 init();
 const timer = setInterval(update, 1000 / 32);
 animate();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// import * as THREE from '/three/build/three.module.js';
-// import {OrbitControls} from '/three/examples/jsm/controls/OrbitControls.js';
-// import {controls.actives} from '/three/examples/jsm/controls/controls.actives.js';
-// import {GLTFLoader} from '/three/examples/jsm/loaders/GLTFLoader.js';
-
-// let clock, activeScene, activeCamera, controls.active, renderer, gltfLoader;
-// let cameras, camIndex;
-// let sunLight;
-// let ambientLight;
-// let loadingLoader;
-
-// // Loaded objects
-// let terrain;
-// let skydome;
-// let city;
-// let cop = {};
-
-// // Shadow Variables
-// const FRUSTUM = 0;
-// const RECEIVE = 1;
-// const CAST_RECEIVE = 2;
-
-// // Loading variables
-// let finishLoading = false;
-
-// // Camera Variables
-// let cameraMode = 0; // 0 = Fly, 1 = Orbit
-// let cycleMesh = 0;
-// let controls.active;
-// let orbitControl;
-
-// initProgram();
-// animate();
-
-// console.log(activeScene);
-
-// function initProgram() {
-	// cameras = [];
-	
-	// // Initiate Scene
-	// let scene = new THREE.Scene();
-	// activeScene = scene;
-	
-	// // Initiate camera
-	// let camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 500);
-	// camera.name = 'frontCamera';
-	// camera.position.set(0, 0, 5);
-	// camera.lookAt(0, 0, 0);
-	// cameras.push(camera);
-	// activeCamera = camera;
-	// camIndex = 0;
-	
-	// camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 500);
-	// camera.name = 'sideCamera';
-	// camera.position.set(5, 0, 0);
-	// camera.lookAt(0, 0, 0);
-	// cameras.push(camera);
-	
-	// // Initiate renderer
-	// renderer = new THREE.WebGLRenderer({ antialiased: true });
-	// renderer.setSize(window.innerWidth, window.innerHeight);
-	// renderer.toneMapping = THREE.ACESFilmicToneMapping;
-	// renderer.outputEncoding = THREE.sRGBEncoding;
-	// renderer.physicallyCorrectLight = true;
-	// renderer.shadowMap.enabled = true;
-	// renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-	// document.body.appendChild(renderer.domElement);
-	
-	// // Initiate Clock
-	// clock = new THREE.Clock();
-	
-	// // Initiate Light
-	// sunLight = new THREE.DirectionalLight(new THREE.Color('#FFFFFF'), 1);
-	// sunLight.name = 'sunLight';
-	// sunLight.position.set(0.5, 10, 0);
-	// sunLight.castShadow = true;
-	// sunLight.shadow.mapSize.width = 1024;
-	// sunLight.shadow.mapSize.height = 1024;
-	// sunLight.shadow.camera.left = -10;
-	// sunLight.shadow.camera.bottom = -10;
-	// sunLight.shadow.camera.right = 10;
-	// sunLight.shadow.camera.top = 10;
-	// sunLight.shadow.camera.near = 0.2;
-	// sunLight.shadow.camera.far = 500;
-	// scene.add(sunLight);
-	
-	// ambientLight = new THREE.AmbientLight( 0xffffff, 0.2 ); // soft white light
-	// scene.add( ambientLight );
-	
-	// // Initiate Meshes
-	// const sphere = new THREE.Mesh(new THREE.SphereGeometry(1), new THREE.MeshStandardMaterial({ color: 0x00ffff }));
-	// sphere.name = 'sphere';
-	// sphere.position.set(-3, 0, 0);
-	// sphere.castShadow = true;
-	// scene.add(sphere);
-	
-	// // Initiate Loading Manager
-	// loadingLoader = new THREE.LoadingManager(undefined, (url, loaded, total) => {
-		// const loadingScreen = document.querySelector('#loading-screen');
-		// const loadingBar = document.querySelector('#load-progress');
-		
-		// let progress = loaded/total * 100;
-		// loadingBar.style.width = `${progress}%`;
-		
-		// // console.log(`Loaded: ${loaded} / ${total}`);
-		
-		// if (loaded === total) {
-			// loadingScreen.classList.add('fade-out');
-			// loadingScreen.addEventListener('transitionend', (event) => {
-				// event.target.remove();
-			// });
-			// finishLoading = true;
-		// }
-	// });
-	
-	// // Load Meshes
-	// gltfLoader = new GLTFLoader(loadingLoader);
-	
-	// gltfLoader.load('/models/terrain/terrain.glb', (glb) => {
-		// // console.log(glb.scene);
-		
-		// terrain = glb.scene.children[0];
-		// terrain.position.set(0, -1.03, 0);
-		// terrain.name = 'grassTerrain';
-		// terrain.scale.set(225, 1, 225);
-		// terrain.receiveShadow = true;
-		
-		// scene.add(terrain);
-	// }, undefined, (err) => {
-		// console.error(err);
-	// });
-
-	// gltfLoader.load('/models/skydome/Skydome.glb', (glb) => {
-		// // console.log(glb, "Skydome");
-		
-		// skydome = glb.scene.children[0];
-		// skydome.position.y = -40;
-		// skydome.material = new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load('/models/skydome/Skydome.png') });
-		// skydome.material.side = THREE.backSide;
-		// skydome.name = 'skydome';
-		// // console.log(skydome.material);
-		
-		// scene.add(skydome);
-	// }, undefined, (err) => {
-		// console.error(err);
-	// });
-
-	// gltfLoader.load('/models/cop/scene.gltf', (gltf) => {
-		// // console.log(gltf, "Cop");
-		
-		// cop.scene = gltf.scene;
-		// cop.scene.position.y = -0.6;
-		// cop.scene.name = 'cop';
-		
-		// loopShadow(cop.scene.children, CAST_RECEIVE);
-		
-		// // Animation System
-		// cop.animations = gltf.animations;
-		// cop.mixer = new THREE.AnimationMixer(cop.scene);
-		// cop.mixer.timeScale = 1.4;
-		// cop.clip = THREE.AnimationClip.findByName( cop.animations, 'walking' );
-		// cop.action = cop.mixer.clipAction( cop.clip );
-		// cop.action.play();
-		
-		// cop.state = 1;
-		// cop.maxDistance = 20;
-		
-		// scene.add(cop.scene);
-	// }, undefined, (err) => {
-		// console.error(err);
-	// });
-
-	// gltfLoader.load('/models/city/scene.gltf', (gltf) => {
-		// console.log(gltf, "City");
-		
-		// city = gltf.scene;
-		// city.scale.set(30, 30, 30);
-		// city.position.y = 45.33;
-		// city.name = 'city';
-		// city.castShadow = true;
-		// city.receiveShadow = true;
-		
-		// loopShadow(city.children[0].children, CAST_RECEIVE);
-		
-		// scene.add(city);
-	// }, undefined, (err) => {
-		// console.error(err);
-	// });
-	
-	// // Initiate Controls
-	// changeToFly();
-// }
-
-// function loopShadow(children, type) {
-	// children.forEach((obj) => {
-		// obj.frustumCulled = false;
-		// obj.receiveShadow = true;
-		// obj.castShadow = true;
-		
-		// if (obj.children.length > 0) loopShadow(obj.children);
-	// });
-// }
-
-// // Change to fly control mode
-// function changeToFly() {
-	// if (orbitControl) orbitControl.dispose();
-	
-	// controls.active = new controls.actives(activeCamera, renderer.domElement);
-	// controls.active.rollSpeed = 0.4;
-	// controls.active.movementSpeed = 2.5;
-	// controls.active.dragToLook = true;
-	// controls.active.update(clock.getDelta());
-// }
-
-// // Change to fly control mode
-// function changeToOrbit() {
-	// if (controls.active) controls.active.dispose();
-	
-	// orbitControl = new OrbitControls(activeCamera, renderer.domElement);
-	// orbitControl.enablePan = false;
-	
-	// orbitControl.update();
-// }
-
-// // Resize Canvas on window
-// window.addEventListener('resize', () => {
-	// activeCamera.aspect = window.innerWidth / window.innerHeight;
-	// activeCamera.updateProjectionMatrix();
-
-	// renderer.setSize( window.innerWidth, window.innerHeight );
-// });
-
-// // Timer to update things differently rather than update based on frames
-// const timer = setInterval(() => {
-	// if (skydome) skydome.rotation.z -= 0.002;
-	
-	// // Rotate sunLight
-	// sunLight.position.x = 10 * Math.sin((Math.PI * Date.now() / 180) / 240 );
-	// sunLight.position.z = 10 * Math.cos((Math.PI * Date.now() / 180) / 240 );
-		
-	// // Animation mixer
-	// if ('mixer' in cop) {
-		// cop.scene.position.z += cop.state * (cop.scene.scale.y * 0.0225);
-		
-		// if (cop.scene.position.z >= cop.maxDistance || cop.scene.position.z <= -cop.maxDistance) {
-			// cop.scene.position.z = cop.state * (cop.maxDistance - 0.02 * cop.state);
-			// cop.scene.rotation.y = Math.PI/2 * (1+cop.state);
-			// cop.state *= -1;
-		// }
-		// cop.mixer.update(clock.getDelta());
-	// }
-// }, 1000 / 32);
-
-// function animate() {
-	// renderer.setAnimationLoop(() => {
-		// if (controls.active) controls.active.update(clock.getDelta());
-		// else if (orbitControl) orbitControl.update();
-		
-		// renderer.render(activeScene, activeCamera);
-	// });
-// }
-
-// // Document Events
-// const body = document.querySelector('body');
-// body.addEventListener('keypress', (event) => {
-	// // console.log(event);
-	
-	// const orbitTarget = document.querySelector('#orbitTarget');
-	// const orbitText = document.querySelector('#orbitText');
-	
-	// // Change the view when the x button is pressed
-	// if (event.key === 'x') {
-		// // if fly, change to orbit
-		// if (cameraMode === 0) {
-			// changeToOrbit();
-			
-			// cameraMode = 1;
-			// orbitTarget.style.display = 'block';
-			// orbitText.innerText = 'Target: center';
-		// }
-		// // If orbit, cycle through meshes after that change to fly
-		// else if (cameraMode === 1) {
-			// // activeScene.children[cycleMesh].remove(activeCamera);
-			
-			// let isValid = false;
-			// while (cameraMode === 1 && !isValid) {
-				// cycleMesh++;
-				// // console.log(cycleMesh);
-				
-				// if (cycleMesh === activeScene.children.length) {
-					// cycleMesh = 0;
-					// cameraMode = 0;
-					// orbitTarget.style.display = 'none';
-				// }
-				// else if ('name' in activeScene.children[cycleMesh]) {
-					// if (activeScene.children[cycleMesh].name === 'city')
-						// isValid = true
-				// }
-			// }
-			
-			// if (cameraMode === 0) {
-				// changeToFly();
-			// }
-			// else if (isValid) {
-				// // activeScene.children[cycleMesh].add(activeCamera);
-				// orbitControl.target = activeScene.children[cycleMesh].position;
-				
-				// // console.log(activeCamera);
-				
-				// orbitText.innerText = 'Target: ' + activeScene.children[cycleMesh].name;
-			// }
-		// }
-	// }
-// });

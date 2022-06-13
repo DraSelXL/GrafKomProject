@@ -1,4 +1,4 @@
-// Contants to use when dealing with the shadowLoop
+// Constants to use when dealing with the shadowLoop
 export const ShadowConstants = {
 	CULL_FRUSTUM: 0,
 	RECEIVE_SHADOW: 1,
@@ -6,7 +6,7 @@ export const ShadowConstants = {
 	CAST_RECEIVE: 3
 }
 
-// Contants to use when switching controls
+// Constants to use when switching controls
 export const ControlTypes = {
 	FLY: 0,
 	ORBIT: 1
