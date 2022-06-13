@@ -203,6 +203,10 @@ function init() {
 		scenes[0].add(objectList[loadIndex].scene);
 	});
 	
+	// Object Placement Setting
+	const objectPlacementX = [0,30,30,0,-30,-30];
+	const objectPlacementZ = [30,15,-15,-30,-15,15];
+	const objectRotationY = [180,-120,-60,0,60,120];
 	// Load the house a few times until maxHouse is reached in a round area
 	for (let i = 0; i < maxHouse; i++) {
 		objectList.push({});
@@ -213,8 +217,8 @@ function init() {
 			objectList[loadIndex].scene = gltf.scene;
 			objectList[loadIndex].animations = gltf.animations || null;
 			objectList[loadIndex].name = 'house' + (i+1);
-			objectList[loadIndex].scene.position.set(20 * Math.sin(180/maxHouse * i), 0, 20 * Math.cos(180/maxHouse * i));
-			objectList[loadIndex].scene.rotation.y = Math.PI + (Math.PI / maxHouse) * i;
+			objectList[i].scene.position.set(objectPlacementX[i], 0, objectPlacementZ[i]);
+			objectList[i].scene.rotation.y = objectRotationY[i] * Math.PI/180;
 			// console.log(Math.PI + i/maxHouse * Math.PI * 2);
 			objectList[loadIndex].scene.scale.set(1.8, 1.8, 1.8);
 			
