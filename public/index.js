@@ -45,11 +45,15 @@ let gltfLoader;
 
 // Objects
 const maxHouse = 5;
+let copIndex = -1;
 const objectList = [];
 
 // Lightings
 let directionalLight;
 let ambientLight;
+
+// Misc
+let orbitDirection = new THREE.Vector3();
 
 /**
 *	Initiate variables for ThreeJS to keep and run
@@ -60,8 +64,8 @@ function init() {
 	
 	// Initiate new cameras
 	let newCamera = new THREE.PerspectiveCamera(90, window.innerWidth / window.innerHeight, 0.1, 1000);
-	newCamera.position.y = 1;
-	newCamera.position.z = -5;
+	newCamera.position.y = 20;
+	newCamera.position.z = -25;
 	newCamera.lookAt(0, 0, 0);
 	cameras.push(newCamera);
 	
@@ -179,6 +183,8 @@ function init() {
 
 		objectList[loadIndex].scene = glb.scene;
 		objectList[loadIndex].name = 'terrain';
+		objectList[loadIndex].animations = glb.animations;
+		objectList[loadIndex].mixer = new THREE.AnimationMixer(objectList[loadIndex].scene);
 		objectList[loadIndex].scene.position.set(0, -0.04, 0);
 		objectList[loadIndex].scene.scale.set(5, 5, 5);
 		objectList[loadIndex].scene.receiveShadow = true;
@@ -194,12 +200,25 @@ function init() {
 		const loadIndex = loadCounter++;
 		objectList[loadIndex].scene = gltf.scene;
 		objectList[loadIndex].animations = gltf.animations;
+		objectList[loadIndex].mixer = new THREE.AnimationMixer(objectList[loadIndex].scene);
 		objectList[loadIndex].name = 'cop';
 		objectList[loadIndex].scene.castShadow = true;
 		objectList[loadIndex].scene.receiveShadow = true;
 		
+		// Custom Cop Variable
+		objectList[loadIndex].state = 0;
+		objectList[loadIndex].counter = 0;
+		
 		loopShadow(objectList[loadIndex].scene.children, ShadowConstants.CAST_RECEIVE);
 		
+		// Animation
+		const clip = THREE.AnimationClip.findByName(objectList[loadIndex].animations, 'walking');
+		// objectList[loadIndex].mixer.timeScale = 4;
+		objectList[loadIndex].mixer.clipAction(clip).play();
+		
+		// console.log(objectList[loadIndex]);
+		
+		copIndex = loadIndex;
 		scenes[0].add(objectList[loadIndex].scene);
 	});
 	
@@ -216,10 +235,10 @@ function init() {
 			// console.log(gltf, 'House' + i);
 			objectList[loadIndex].scene = gltf.scene;
 			objectList[loadIndex].animations = gltf.animations || null;
+			objectList[loadIndex].mixer = new THREE.AnimationMixer(objectList[loadIndex].scene);
 			objectList[loadIndex].name = 'house' + (i+1);
 			objectList[loadIndex].scene.position.set(objectPlacementX[i], 0, objectPlacementZ[i]);
 			objectList[loadIndex].scene.rotation.y = objectRotationY[i] * Math.PI/180;
-			// console.log(Math.PI + i/maxHouse * Math.PI * 2);
 			objectList[loadIndex].scene.scale.set(1.8, 1.8, 1.8);
 			
 			loopShadow(objectList[loadIndex].scene.children, ShadowConstants.CAST_RECEIVE);
@@ -261,8 +280,8 @@ function loopShadow(children, type) {
 	});
 }
 
+// Change the control into orbit camera mode
 function changeToOrbit() {
-	// Change the control into orbit camera mode
 	if (controls.active) controls.active.dispose(); // Remove all resources for the control
 	
 	CameraIndex.active = cameras.length-1;
@@ -273,7 +292,14 @@ function changeToOrbit() {
 	controls.active.update();
 	controls.type = ControlTypes.ORBIT;
 	
-	EVENTS.orbitCameraPosition(cameras, CameraIndex, objectList, controls); // Set the camera position
+	// Set the camera position
+	let objectX = objectList[controls.orbitIndex].scene.position.x - 15;
+	let objectY = objectList[controls.orbitIndex].scene.position.y + 2;
+	let objectZ = objectList[controls.orbitIndex].scene.position.z - 15;
+	cameras[CameraIndex.orbitIndex].position.set(objectX, objectY, objectZ);
+	
+	controls.active.target = objectList[controls.orbitIndex].scene.position;
+	controls.active.update();
 	
 	// Update the GUI
 	orbitModeTextUI.innerText = 'Mode: Orbit';
@@ -282,15 +308,15 @@ function changeToOrbit() {
 	orbitTargetTextUI.innerText = `Target: ${objectList[controls.orbitIndex].name}`;
 }
 
+// Change the control into fly camera mode
 function changeToFly() {
-	// Change the control into fly camera mode
 	if(controls.active) controls.active.dispose(); // Remove all resources for the control
 	
 	CameraIndex.active = (CameraIndex.next-1 < 0) ? CameraIndex.orbitIndex-1 : CameraIndex.next-1;
 	controls.active = new FlyControls(cameras[CameraIndex.active], renderers[0].domElement);
-	controls.active.movementSpeed = 2.5;
+	controls.active.movementSpeed = 10;
 	controls.active.dragToLook = true;
-	controls.active.rollSpeed = 0.4;
+	controls.active.rollSpeed = 1;
 	controls.active.update(clock.getDelta());
 	controls.type = ControlTypes.FLY;
 	
@@ -315,29 +341,57 @@ function switchControlEvent() {
 	});
 }
 
-function update() {
-	
-}
-
 function animate() {
-	// main renderer
-	renderers[0].setAnimationLoop(() => {
-		if (controls.active) {
-			if (controls.type === ControlTypes.ORBIT) {
-				
-			}
-			
-			controls.active.update(clock.getDelta());
-		}
+	// Secondary Renderer
+	renderers[0].setAnimationLoop((timestamp) => {
+		// console.log(timestamp);
+		
+		if (controls.active) controls.active.update(clock.getDelta());
 		
 		renderers[0].render(activeScene, cameras[CameraIndex.active]);
-	});
-	// Secondary Renderer
-	renderers[1].setAnimationLoop(() => {
 		renderers[1].render(activeScene, cameras[CameraIndex.next]);
+	});
+	renderers[1].setAnimationLoop((timestamp) => {
+		// console.log(timestamp);
+		
+		if (controls.active) controls.active.update(clock.getDelta());
+		
 	});
 }
 
 init();
-const timer = setInterval(update, 1000 / 32);
+const timer = setInterval(() => {
+	// Update animations
+	for (let i = 0; i < objectList.length; i++) {
+		if (objectList[i].mixer) {
+			objectList[i].mixer.update(1/32);
+		}
+	}
+	
+	// Update Cop position and rotation
+	if (objectList[copIndex]) {
+		const moveDegree = objectList[copIndex].counter++ / 180;
+		
+		const offset = 15;
+		objectList[copIndex].scene.position.x = offset * Math.cos(moveDegree);
+		objectList[copIndex].scene.position.z = offset * Math.sin(moveDegree);
+		objectList[copIndex].scene.rotation.y = -moveDegree;
+		
+		// console.log(-Math.PI/2 + -Math.PI * Math.cos(moveDegree));
+	}
+	
+	if (controls.active) {
+		if (controls.type === ControlTypes.ORBIT) {
+			const camOffset = 12;
+			
+			orbitDirection.subVectors(cameras[CameraIndex.active].position, controls.active.target);
+			orbitDirection.normalize().multiplyScalar(camOffset);
+			orbitDirection.add(controls.active.target);
+			cameras[CameraIndex.active].position.copy(orbitDirection);
+		}
+	}
+	
+	// Execute a render asyncronously because otherwise, rendering synchronously will not work
+	renderers[1].render(activeScene, cameras[CameraIndex.next]);
+}, 1000/32);
 animate();

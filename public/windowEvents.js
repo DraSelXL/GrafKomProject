@@ -8,6 +8,7 @@ import {OrbitControls} from '/three/examples/jsm/controls/OrbitControls.js';
 export function resizeCanvasesEvent(mainRenderer, secondaryRenderer) {
 	window.addEventListener('resize', () => {
 		mainRenderer.setSize(window.innerWidth, window.innerHeight);
+		mainRenderer.setPixelRatio(window.innerWidth / window.innerHeight);
 		secondaryRenderer.setSize(window.innerWidth / 4, window.innerHeight / 4);
 	});
 }
