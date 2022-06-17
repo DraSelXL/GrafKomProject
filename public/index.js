@@ -132,12 +132,12 @@ function init() {
 	directionalLight.position.set(0, 100, -40);
 	directionalLight.shadow.mapSize.width = 1024;
 	directionalLight.shadow.mapSize.height = 1024;
-	directionalLight.shadow.camera.left = -10;
-	directionalLight.shadow.camera.bottom = -10;
-	directionalLight.shadow.camera.right = 10;
-	directionalLight.shadow.camera.top = 10;
+	directionalLight.shadow.camera.left = -100;
+	directionalLight.shadow.camera.bottom = -100;
+	directionalLight.shadow.camera.right = 100;
+	directionalLight.shadow.camera.top = 100;
 	directionalLight.shadow.camera.near = 0.2;
-	directionalLight.shadow.camera.far = 100;
+	directionalLight.shadow.camera.far = 200;
 	scenes[0].add(directionalLight);
 	
 	controls.orbitException.push('ambientLight'); // Add to the exception of orbiting
@@ -349,7 +349,6 @@ function animate() {
 		if (controls.active) controls.active.update(clock.getDelta());
 		
 		renderers[0].render(activeScene, cameras[CameraIndex.active]);
-		renderers[1].render(activeScene, cameras[CameraIndex.next]);
 	});
 	renderers[1].setAnimationLoop((timestamp) => {
 		// console.log(timestamp);
