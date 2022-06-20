@@ -1,0 +1,393 @@
+{
+  "accessors": [
+    {
+      "bufferView": 2,
+      "componentType": 5126,
+      "count": 1394,
+      "max": [
+        2.0736870765686035,
+        0.05845765396952629,
+        1.003998875617981
+      ],
+      "min": [
+        -2.0116846561431885,
+        -0.06735097616910934,
+        -0.9978528618812561
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 16728,
+      "componentType": 5126,
+      "count": 1394,
+      "max": [
+        0.9633362293243408,
+        1.0,
+        0.9925976991653442
+      ],
+      "min": [
+        -0.9634065628051758,
+        -1.0,
+        -0.19762277603149414
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 1,
+      "componentType": 5126,
+      "count": 1394,
+      "max": [
+        0.9772324562072754,
+        0.8672706484794617
+      ],
+      "min": [
+        0.02407379448413849,
+        0.19623833894729614
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 0,
+      "componentType": 5125,
+      "count": 2160,
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 33456,
+      "componentType": 5126,
+      "count": 164,
+      "max": [
+        2.0888805389404297,
+        0.029693186283111572,
+        0.42796581983566284
+      ],
+      "min": [
+        -2.0881824493408203,
+        -0.029693227261304855,
+        -0.4255170226097107
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 35424,
+      "componentType": 5126,
+      "count": 164,
+      "max": [
+        1.0,
+        1.0,
+        0.9991390109062195
+      ],
+      "min": [
+        -1.0,
+        -1.0,
+        -0.9991390109062195
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 3,
+      "componentType": 5126,
+      "count": 164,
+      "max": [
+        0.7126078009605408,
+        0.7092372179031372,
+        0.7049751877784729,
+        1.0
+      ],
+      "min": [
+        -0.7133285403251648,
+        -0.7092345952987671,
+        -0.7015655636787415,
+        1.0
+      ],
+      "type": "VEC4"
+    },
+    {
+      "bufferView": 1,
+      "byteOffset": 11152,
+      "componentType": 5126,
+      "count": 164,
+      "max": [
+        0.9743430018424988,
+        0.9791063666343689
+      ],
+      "min": [
+        0.020666465163230896,
+        0.04759377986192703
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 0,
+      "byteOffset": 8640,
+      "componentType": 5125,
+      "count": 264,
+      "type": "SCALAR"
+    }
+  ],
+  "asset": {
+    "extras": {
+      "author": "Agustín Hönnun (https://sketchfab.com/Agustin_Honnun)",
+      "license": "CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)",
+      "source": "https://sketchfab.com/3d-models/handpainted-fence-free-agustin-honnun-9c2fb0b1afaa450f97ac9f6217ed6dc9",
+      "title": "HandPainted Fence [FREE] | Agustin Honnun"
+    },
+    "generator": "Sketchfab-12.67.0",
+    "version": "2.0"
+  },
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteLength": 9696,
+      "name": "floatBufferViews",
+      "target": 34963
+    },
+    {
+      "buffer": 0,
+      "byteLength": 12464,
+      "byteOffset": 9696,
+      "byteStride": 8,
+      "name": "floatBufferViews",
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteLength": 37392,
+      "byteOffset": 22160,
+      "byteStride": 12,
+      "name": "floatBufferViews",
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteLength": 2624,
+      "byteOffset": 59552,
+      "byteStride": 16,
+      "name": "floatBufferViews",
+      "target": 34962
+    }
+  ],
+  "buffers": [
+    {
+      "byteLength": 62176,
+      "uri": "scene.bin"
+    }
+  ],
+  "images": [
+    {
+      "uri": "textures/Fence_Color_baseColor.png"
+    },
+    {
+      "uri": "textures/Planks_Color_baseColor.png"
+    },
+    {
+      "uri": "textures/Planks_Color_normal.png"
+    }
+  ],
+  "materials": [
+    {
+      "doubleSided": true,
+      "name": "Fence_Color",
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 0
+        },
+        "metallicFactor": 0.0
+      }
+    },
+    {
+      "doubleSided": true,
+      "name": "Planks_Color",
+      "normalTexture": {
+        "index": 2
+      },
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 1
+        },
+        "metallicFactor": 0.0,
+        "roughnessFactor": 0.7946178522652234
+      }
+    }
+  ],
+  "meshes": [
+    {
+      "name": "Fence_Fence_Color_0",
+      "primitives": [
+        {
+          "attributes": {
+            "NORMAL": 1,
+            "POSITION": 0,
+            "TEXCOORD_0": 2
+          },
+          "indices": 3,
+          "material": 0,
+          "mode": 4
+        }
+      ]
+    },
+    {
+      "name": "Planks_Planks_Color_0",
+      "primitives": [
+        {
+          "attributes": {
+            "NORMAL": 5,
+            "POSITION": 4,
+            "TANGENT": 6,
+            "TEXCOORD_0": 7
+          },
+          "indices": 8,
+          "material": 1,
+          "mode": 4
+        }
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "children": [
+        1
+      ],
+      "matrix": [
+        0.004761978983879089,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0573717421367344e-18,
+        -0.004761978983879089,
+        0.0,
+        0.0,
+        0.004761978983879089,
+        1.0573717421367344e-18,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "name": "Sketchfab_model"
+    },
+    {
+      "children": [
+        2
+      ],
+      "matrix": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        -1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "name": "Fence.fbx"
+    },
+    {
+      "children": [
+        3,
+        5
+      ],
+      "name": "RootNode"
+    },
+    {
+      "children": [
+        4
+      ],
+      "matrix": [
+        100.0,
+        0.0,
+        0.0,
+        0.0,
+        -0.0,
+        -1.629206793918314e-05,
+        -99.99999999999868,
+        0.0,
+        0.0,
+        99.99999999999868,
+        -1.629206793918314e-05,
+        0.0,
+        -0.2401590347290039,
+        99.60011291503906,
+        -0.031486671417951584,
+        1.0
+      ],
+      "name": "Fence"
+    },
+    {
+      "mesh": 0,
+      "name": "Fence_Fence_Color_0"
+    },
+    {
+      "children": [
+        6
+      ],
+      "matrix": [
+        100.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        -1.629206793918314e-05,
+        -99.99999999999868,
+        0.0,
+        0.0,
+        99.99999999999868,
+        -1.629206793918314e-05,
+        0.0,
+        1.7559051513671875,
+        98.27721405029297,
+        -8.539596557617188,
+        1.0
+      ],
+      "name": "Planks"
+    },
+    {
+      "mesh": 1,
+      "name": "Planks_Planks_Color_0"
+    }
+  ],
+  "samplers": [
+    {
+      "magFilter": 9729,
+      "minFilter": 9987,
+      "wrapS": 10497,
+      "wrapT": 10497
+    }
+  ],
+  "scene": 0,
+  "scenes": [
+    {
+      "name": "Sketchfab_Scene",
+      "nodes": [
+        0
+      ]
+    }
+  ],
+  "textures": [
+    {
+      "sampler": 0,
+      "source": 0
+    },
+    {
+      "sampler": 0,
+      "source": 1
+    },
+    {
+      "sampler": 0,
+      "source": 2
+    }
+  ]
+}

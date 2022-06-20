@@ -1,0 +1,11 @@
+Model Information:
+* title:	Valencia Fountain
+* source:	https://sketchfab.com/3d-models/valencia-fountain-0198556e1b6648289693b0bac4fe496d
+* author:	guillemvilah (https://sketchfab.com/guillemvilah)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Valencia Fountain" (https://sketchfab.com/3d-models/valencia-fountain-0198556e1b6648289693b0bac4fe496d) by guillemvilah (https://sketchfab.com/guillemvilah) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

@@ -1,0 +1,11 @@
+Model Information:
+* title:	Ancient Lamp
+* source:	https://sketchfab.com/3d-models/ancient-lamp-7f3caccb5c684804a1dd572bf358bdd1
+* author:	Avgust9 (https://sketchfab.com/Avgust9)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Ancient Lamp" (https://sketchfab.com/3d-models/ancient-lamp-7f3caccb5c684804a1dd572bf358bdd1) by Avgust9 (https://sketchfab.com/Avgust9) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

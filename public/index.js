@@ -44,7 +44,7 @@ let loadError;
 let gltfLoader;
 
 // Objects
-const maxHouse = 5;
+const maxHouse = 6;
 let copIndex = -1;
 const objectList = [];
 
@@ -177,7 +177,8 @@ function init() {
 	let loadCounter = 0;
 	objectList.push({});
 	gltfLoader.load('models/terrain/terrain.glb', (glb) => {
-		const loadIndex = loadCounter++;
+		const loadIndex = loadCounter;
+		loadCounter = loadCounter+1;
 		// console.log(glb, 'terrain');
 		controls.orbitException.push('terrain'); // Add to the exception of orbiting
 
@@ -197,7 +198,8 @@ function init() {
 	// Load the cop
 	objectList.push({});
 	gltfLoader.load('models/cop/scene.gltf', (gltf) => {
-		const loadIndex = loadCounter++;
+		const loadIndex = loadCounter;
+		loadCounter = loadCounter+1;
 		objectList[loadIndex].scene = gltf.scene;
 		objectList[loadIndex].animations = gltf.animations;
 		objectList[loadIndex].mixer = new THREE.AnimationMixer(objectList[loadIndex].scene);
@@ -223,15 +225,15 @@ function init() {
 	});
 	
 	// Object Placement Setting
-	const objectPlacementX = [0,30,30,0,-30,-30];
-	const objectPlacementZ = [30,15,-15,-30,-15,15];
-	const objectRotationY = [180,-120,-60,0,60,120];
+	const objectPlacementX = [40,30,-30,-40];
+	const objectPlacementZ = [10,-20,-20,10];
+	const objectRotationY = [-120,-90,90,120];
 	// Load the house a few times until maxHouse is reached in a round area
-	for (let i = 0; i < maxHouse; i++) {
+	for (let i = 0; i < 4; i++) {
 		objectList.push({});
-		
 		gltfLoader.load('models/house/scene.gltf', (gltf) => {
-			const loadIndex = loadCounter++;
+			const loadIndex = loadCounter;
+			loadCounter = loadCounter+1;
 			// console.log(gltf, 'House' + i);
 			objectList[loadIndex].scene = gltf.scene;
 			objectList[loadIndex].animations = gltf.animations || null;
@@ -245,6 +247,297 @@ function init() {
 			
 			scenes[0].add(objectList[loadIndex].scene);
 		});
+	}
+	// Load mountain
+	{
+		// Object Mountain Placement Setting
+		const mountainPlacementX = [-50,50];
+		const mountainPlacementZ = [80,80];
+		const mountainRotationY = [45,135];
+		for (let i = 0; i < 2; i++) {
+			objectList.push({});
+			gltfLoader.load('models/mountain/scene.gltf', (gltf) => {
+				const loadIndex = loadCounter;
+				loadCounter = loadCounter+1;
+				objectList[loadIndex].scene = gltf.scene;
+				objectList[loadIndex].animations = gltf.animations;
+				objectList[loadIndex].mixer = new THREE.AnimationMixer(objectList[loadIndex].scene);
+				objectList[loadIndex].name = 'mountain';
+				objectList[loadIndex].scene.position.set(mountainPlacementX[i], 38, mountainPlacementZ[i]);
+				objectList[loadIndex].scene.rotation.y = mountainRotationY[i] * Math.PI/180;
+				
+				objectList[loadIndex].scene.scale.set(8, 8, 8);
+				
+				objectList[loadIndex].scene.castShadow = true;
+				objectList[loadIndex].scene.receiveShadow = true;
+				
+				
+				loopShadow(objectList[loadIndex].scene.children, ShadowConstants.CAST_RECEIVE);
+				
+				// console.log(objectList[loadIndex]);
+				
+				scenes[0].add(objectList[loadIndex].scene);
+			});
+		}
+	}
+
+	// Load Statue
+	{
+		const statuePlacementX = [-10,10];
+		for (let i = 0; i < 2; i++) {
+			objectList.push({});
+			gltfLoader.load('models/statueAlliance/scene.gltf', (gltf) => {
+				const loadIndex = loadCounter;
+				loadCounter = loadCounter+1;
+				objectList[loadIndex].scene = gltf.scene;
+				objectList[loadIndex].animations = gltf.animations;
+				objectList[loadIndex].mixer = new THREE.AnimationMixer(objectList[loadIndex].scene);
+				objectList[loadIndex].name = 'statue alliance';
+				objectList[loadIndex].scene.position.set(statuePlacementX[i], 0, -30);
+				objectList[loadIndex].scene.scale.set(0.02, 0.02, 0.02);
+				// objectList[loadIndex].scene.rotation.y = 45 * Math.PI/180;
+				objectList[loadIndex].scene.castShadow = true;
+				objectList[loadIndex].scene.receiveShadow = true;
+				loopShadow(objectList[loadIndex].scene.children, ShadowConstants.CAST_RECEIVE);
+				
+				// console.log(objectList[loadIndex]);
+				
+				scenes[0].add(objectList[loadIndex].scene);
+			});
+		}
+	}
+	// Load Ancient Tree
+	{
+		const ancientTreePlacementX = [5,25,-25];
+		const ancientTreePlacementZ = [50,38,30];
+		
+		for (let i = 0; i < 3; i++) {
+			objectList.push({});
+			gltfLoader.load('models/ancient_tree/scene.gltf', (gltf) => {
+				const loadIndex = loadCounter;
+				loadCounter = loadCounter+1;
+				objectList[loadIndex].scene = gltf.scene;
+				objectList[loadIndex].animations = gltf.animations;
+				objectList[loadIndex].mixer = new THREE.AnimationMixer(objectList[loadIndex].scene);
+				objectList[loadIndex].name = 'ancient tree';
+				objectList[loadIndex].scene.position.set(ancientTreePlacementX[i], 0, ancientTreePlacementZ[i]);
+				objectList[loadIndex].scene.scale.set(0.02,0.02,0.02);
+				// objectList[loadIndex].scene.rotation.y = 45 * Math.PI/180;
+				objectList[loadIndex].scene.castShadow = true;
+				objectList[loadIndex].scene.receiveShadow = true;
+				loopShadow(objectList[loadIndex].scene.children, ShadowConstants.CAST_RECEIVE);
+				
+				// console.log(objectList[loadIndex]);
+				
+				scenes[0].add(objectList[loadIndex].scene);
+			});
+		}
+	}
+	// Load Ancient Lamp
+	{
+		const ancientLampPlacementX = [35,-35];
+		const ancientLampPlacementZ = [-5,-5];
+		for (let i = 0; i < 2; i++) {
+			objectList.push({});
+			gltfLoader.load('models/ancient_lamp/scene.gltf', (gltf) => {
+				const loadIndex = loadCounter;
+				loadCounter = loadCounter+1;
+				objectList[loadIndex].scene = gltf.scene;
+				objectList[loadIndex].animations = gltf.animations;
+				objectList[loadIndex].mixer = new THREE.AnimationMixer(objectList[loadIndex].scene);
+				objectList[loadIndex].name = 'ancient lamp';
+				objectList[loadIndex].scene.position.set(ancientLampPlacementX[i], 5, ancientLampPlacementZ[i]);
+				objectList[loadIndex].scene.scale.set(1, 1, 1);
+				// objectList[loadIndex].scene.rotation.y = 45 * Math.PI/180;
+				objectList[loadIndex].scene.castShadow = true;
+				objectList[loadIndex].scene.receiveShadow = true;
+				loopShadow(objectList[loadIndex].scene.children, ShadowConstants.CAST_RECEIVE);
+				
+				// console.log(objectList[loadIndex]);
+				
+				scenes[0].add(objectList[loadIndex].scene);
+			});
+		}
+	}
+	// Load fountain
+	{
+		objectList.push({});
+		gltfLoader.load('models/fountain/scene.gltf', (gltf) => {
+			const loadIndex = loadCounter;
+			loadCounter = loadCounter+1;
+			objectList[loadIndex].scene = gltf.scene;
+			objectList[loadIndex].animations = gltf.animations;
+			objectList[loadIndex].mixer = new THREE.AnimationMixer(objectList[loadIndex].scene);
+			objectList[loadIndex].name = 'fountain';
+			objectList[loadIndex].scene.position.set(0, -0.5, 0);
+			objectList[loadIndex].scene.scale.set(0.02, 0.02, 0.02);
+			// objectList[loadIndex].scene.rotation.y = 45 * Math.PI/180;
+			objectList[loadIndex].scene.castShadow = true;
+			objectList[loadIndex].scene.receiveShadow = true;
+			loopShadow(objectList[loadIndex].scene.children, ShadowConstants.CAST_RECEIVE);
+			
+			// console.log(objectList[loadIndex]);
+			
+			scenes[0].add(objectList[loadIndex].scene);
+		});
+	}
+
+	// Load Water Tower
+	{
+		const towerPlacementX = [45,-45];
+		const towerPlacementZ = [-10,-10];
+		for (let i = 0; i < 2; i++) {
+			objectList.push({});
+			gltfLoader.load('models/water_tower/scene.gltf', (gltf) => {
+				const loadIndex = loadCounter;
+				loadCounter = loadCounter+1;
+				objectList[loadIndex].scene = gltf.scene;
+				objectList[loadIndex].animations = gltf.animations;
+				objectList[loadIndex].mixer = new THREE.AnimationMixer(objectList[loadIndex].scene);
+				objectList[loadIndex].name = 'water tower';
+				objectList[loadIndex].scene.position.set(towerPlacementX[i], 0, towerPlacementZ[i]);
+				objectList[loadIndex].scene.scale.set(1, 1, 1);
+				// objectList[loadIndex].scene.rotation.y = 45 * Math.PI/180;
+				objectList[loadIndex].scene.castShadow = true;
+				objectList[loadIndex].scene.receiveShadow = true;
+				loopShadow(objectList[loadIndex].scene.children, ShadowConstants.CAST_RECEIVE);
+				
+				// console.log(objectList[loadIndex]);
+				
+				scenes[0].add(objectList[loadIndex].scene);
+			});
+		}
+
+	}
+	// Load Mid House
+	{
+		objectList.push({});
+		gltfLoader.load('models/kades_house/scene.gltf', (gltf) => {
+			const loadIndex = loadCounter;
+			loadCounter = loadCounter+1;
+			objectList[loadIndex].scene = gltf.scene;
+			objectList[loadIndex].animations = gltf.animations;
+			objectList[loadIndex].mixer = new THREE.AnimationMixer(objectList[loadIndex].scene);
+			objectList[loadIndex].name = 'big house';
+			objectList[loadIndex].scene.position.set(0, 0, 30);
+			objectList[loadIndex].scene.scale.set(5, 5, 5);
+			objectList[loadIndex].scene.rotation.y = 180 * Math.PI/180;
+			objectList[loadIndex].scene.castShadow = true;
+			objectList[loadIndex].scene.receiveShadow = true;
+			loopShadow(objectList[loadIndex].scene.children, ShadowConstants.CAST_RECEIVE);
+			
+			// console.log(objectList[loadIndex]);
+			
+			scenes[0].add(objectList[loadIndex].scene);
+		});
+	}
+	// Load Stone Walkway
+	{
+		const stonePlacementX = [2,0,-2,2,0,-2,2,0,-2,2,0,-2];
+		const stonePlacementZ = [-40,-40,-40,-30,-30,-30,-21,-21,-21,-11,-11,-11];
+		const stoneRotationY = [90,-90,90,90,-90,90,90,-90,90,90,-90,90]
+		for(let i = 0; i < 12; i++){
+			objectList.push({});
+			gltfLoader.load('models/stone_walkway/scene.gltf',(gltf)=>{
+				const loadIndex = loadCounter;
+				loadCounter = loadCounter+1;
+				objectList[loadIndex].scene = gltf.scene;
+				objectList[loadIndex].animations = gltf.animations;
+				objectList.mixer = new THREE.AnimationMixer(objectList[loadIndex].scene);
+				objectList[loadIndex].name = 'stone path';
+				objectList[loadIndex].scene.position.set(stonePlacementX[i], 0, stonePlacementZ[i]);
+				objectList[loadIndex].scene.scale.set(1, 1, 1);
+				objectList[loadIndex].scene.rotation.y = stoneRotationY[i] * Math.PI/180;
+				objectList[loadIndex].scene.castShadow = true;
+				objectList[loadIndex].scene.receiveShadow = true;
+				loopShadow(objectList[loadIndex].scene.children, ShadowConstants.CAST_RECEIVE);
+			
+			// console.log(objectList[loadIndex]);
+			
+			scenes[0].add(objectList[loadIndex].scene);
+			})
+		}
+	}
+	// Load Rock Fence
+	{
+		const rockFencePlacementX = [-6,-14.5,-9,-9,6,14,9,9];
+		const rockFencePlacementZ = [-31,-31,-35,-26,-31,-31,-35,-26];
+		const rockFenceRotationY = [90,90,0,0,90,90,180,180]
+		for(let i = 0; i < 8; i++){
+			objectList.push({});
+			gltfLoader.load('models/fence_rock/scene.gltf',(gltf)=>{
+				const loadIndex = loadCounter;
+				loadCounter = loadCounter+1;
+				objectList[loadIndex].scene = gltf.scene;
+				objectList[loadIndex].animations = gltf.animations;
+				objectList.mixer = new THREE.AnimationMixer(objectList[loadIndex].scene);
+				objectList[loadIndex].name = 'fence rock';
+				objectList[loadIndex].scene.position.set(rockFencePlacementX[i], 0, rockFencePlacementZ[i]);
+				objectList[loadIndex].scene.scale.set(0.02, 0.02, 0.02);
+				objectList[loadIndex].scene.rotation.y = rockFenceRotationY[i] * Math.PI/180;
+				objectList[loadIndex].scene.castShadow = true;
+				objectList[loadIndex].scene.receiveShadow = true;
+				loopShadow(objectList[loadIndex].scene.children, ShadowConstants.CAST_RECEIVE);
+			
+			// console.log(objectList[loadIndex]);
+			
+			scenes[0].add(objectList[loadIndex].scene);
+			})
+		}
+	}
+	// Load Stone Wall
+	{
+		const stoneWallPlacementX = [50,-50,50,-50];
+		const stoneWallPlacementZ = [20,20,-23,-23];
+		const stoneWallRotationY = [60,120,-60,-120]
+		for(let i = 0; i < 4; i++){
+			objectList.push({});
+			gltfLoader.load('models/stone_wall/scene.gltf',(gltf)=>{
+				const loadIndex = loadCounter;
+				loadCounter = loadCounter+1;
+				objectList[loadIndex].scene = gltf.scene;
+				objectList[loadIndex].animations = gltf.animations;
+				objectList.mixer = new THREE.AnimationMixer(objectList[loadIndex].scene);
+				objectList[loadIndex].name = 'stone wall';
+				objectList[loadIndex].scene.position.set(stoneWallPlacementX[i], 0, stoneWallPlacementZ[i]);
+				objectList[loadIndex].scene.scale.set(0.05, 0.05, 0.05);
+				objectList[loadIndex].scene.rotation.y = stoneWallRotationY[i] * Math.PI/180;
+				objectList[loadIndex].scene.castShadow = true;
+				objectList[loadIndex].scene.receiveShadow = true;
+				loopShadow(objectList[loadIndex].scene.children, ShadowConstants.CAST_RECEIVE);
+			
+			// console.log(objectList[loadIndex]);
+			
+			scenes[0].add(objectList[loadIndex].scene);
+			})
+		}
+	}
+	// Load Forest
+	{
+		const forestPlacementX = [-50,49];
+		const forestPlacementZ = [-72,-70];
+		const forestRotationY = [0,180]
+		for(let i = 0; i < 2; i++){
+			objectList.push({});
+			gltfLoader.load('models/forest/scene.gltf', (gltf) => {
+				const loadIndex = loadCounter;
+				loadCounter = loadCounter+1;
+				objectList[loadIndex].scene = gltf.scene;
+				objectList[loadIndex].animations = gltf.animations;
+				objectList[loadIndex].mixer = new THREE.AnimationMixer(objectList[loadIndex].scene);
+				objectList[loadIndex].name = 'forest';
+				objectList[loadIndex].scene.position.set(forestPlacementX[i], 0.01, forestPlacementZ[i]);
+				objectList[loadIndex].scene.scale.set(6.4, 4, 4);
+				objectList[loadIndex].scene.rotation.y = forestRotationY[i] * Math.PI/180;
+				objectList[loadIndex].scene.castShadow = true;
+				objectList[loadIndex].scene.receiveShadow = true;
+				loopShadow(objectList[loadIndex].scene.children, ShadowConstants.CAST_RECEIVE);
+				
+				// console.log(objectList[loadIndex]);
+				
+				scenes[0].add(objectList[loadIndex].scene);
+			});
+		}
 	}
 	
 	// Initiate the GUI

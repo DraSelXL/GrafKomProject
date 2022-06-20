@@ -1,0 +1,11 @@
+Model Information:
+* title:	Water Tower Western
+* source:	https://sketchfab.com/3d-models/water-tower-western-36b0100afc894e5283b259fc65a50d17
+* author:	Andrew_Fox (https://sketchfab.com/Andrew_Fox)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Water Tower Western" (https://sketchfab.com/3d-models/water-tower-western-36b0100afc894e5283b259fc65a50d17) by Andrew_Fox (https://sketchfab.com/Andrew_Fox) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

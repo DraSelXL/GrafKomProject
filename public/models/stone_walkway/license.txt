@@ -1,0 +1,11 @@
+Model Information:
+* title:	Walkway Stones
+* source:	https://sketchfab.com/3d-models/walkway-stones-3268b9e74f73498fa93912922bc4df73
+* author:	Thunder (https://sketchfab.com/thunderpwn)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Walkway Stones" (https://sketchfab.com/3d-models/walkway-stones-3268b9e74f73498fa93912922bc4df73) by Thunder (https://sketchfab.com/thunderpwn) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

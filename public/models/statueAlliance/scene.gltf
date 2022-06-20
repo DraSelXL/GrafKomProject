@@ -1,0 +1,334 @@
+{
+  "accessors": [
+    {
+      "bufferView": 2,
+      "componentType": 5126,
+      "count": 3455,
+      "max": [
+        161.26390075683594,
+        184.62060546875,
+        779.9954223632813
+      ],
+      "min": [
+        -161.3343048095703,
+        -185.74130249023438,
+        -2.985100030899048
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 41460,
+      "componentType": 5126,
+      "count": 3455,
+      "max": [
+        0.9999463558197021,
+        0.9999890327453613,
+        0.9999406337738037
+      ],
+      "min": [
+        -0.9999463558197021,
+        -0.9996481537818909,
+        -0.999985933303833
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 3,
+      "componentType": 5126,
+      "count": 3455,
+      "max": [
+        0.9999967217445374,
+        0.999998152256012,
+        0.9999488592147827,
+        1.0
+      ],
+      "min": [
+        -1.0,
+        -0.9999438524246216,
+        -0.9999470710754395,
+        -1.0
+      ],
+      "type": "VEC4"
+    },
+    {
+      "bufferView": 1,
+      "componentType": 5126,
+      "count": 3455,
+      "max": [
+        0.9957000017166138,
+        0.9962000250816345
+      ],
+      "min": [
+        0.007499999832361937,
+        0.009999999776482582
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 0,
+      "componentType": 5125,
+      "count": 9387,
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 82920,
+      "componentType": 5126,
+      "count": 2673,
+      "max": [
+        161.26390075683594,
+        184.62060546875,
+        779.1832885742188
+      ],
+      "min": [
+        -161.3343048095703,
+        -185.74130249023438,
+        -2.985100030899048
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 114996,
+      "componentType": 5126,
+      "count": 2673,
+      "max": [
+        0.9999959468841553,
+        0.9999969005584717,
+        0.9999784231185913
+      ],
+      "min": [
+        -0.999815046787262,
+        -0.999998927116394,
+        -0.9999160766601563
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 3,
+      "byteOffset": 55280,
+      "componentType": 5126,
+      "count": 2673,
+      "max": [
+        1.0,
+        0.9999979138374329,
+        0.9999902844429016,
+        1.0
+      ],
+      "min": [
+        -1.0,
+        -0.9999836087226868,
+        -0.9999976754188538,
+        -1.0
+      ],
+      "type": "VEC4"
+    },
+    {
+      "bufferView": 1,
+      "byteOffset": 27640,
+      "componentType": 5126,
+      "count": 2673,
+      "max": [
+        0.9950000047683716,
+        0.9944000244140625
+      ],
+      "min": [
+        0.00570000009611249,
+        0.009600000455975533
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 0,
+      "byteOffset": 37548,
+      "componentType": 5125,
+      "count": 8886,
+      "type": "SCALAR"
+    }
+  ],
+  "asset": {
+    "extras": {
+      "author": "ahtiandr (https://sketchfab.com/ahtiandr)",
+      "license": "CC-BY-NC-4.0 (http://creativecommons.org/licenses/by-nc/4.0/)",
+      "source": "https://sketchfab.com/3d-models/warcraft-alliance-statue-7aec2e1611944d928a2ca5a2e0926e84",
+      "title": "Warcraft Alliance Statue"
+    },
+    "generator": "Sketchfab-12.68.0",
+    "version": "2.0"
+  },
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteLength": 73092,
+      "name": "floatBufferViews",
+      "target": 34963
+    },
+    {
+      "buffer": 0,
+      "byteLength": 49024,
+      "byteOffset": 73092,
+      "byteStride": 8,
+      "name": "floatBufferViews",
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteLength": 147072,
+      "byteOffset": 122116,
+      "byteStride": 12,
+      "name": "floatBufferViews",
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteLength": 98048,
+      "byteOffset": 269188,
+      "byteStride": 16,
+      "name": "floatBufferViews",
+      "target": 34962
+    }
+  ],
+  "buffers": [
+    {
+      "byteLength": 367236,
+      "uri": "scene.bin"
+    }
+  ],
+  "images": [
+    {
+      "uri": "textures/default_baseColor.png"
+    },
+    {
+      "uri": "textures/default_emissive.png"
+    },
+    {
+      "uri": "textures/default_normal.png"
+    }
+  ],
+  "materials": [
+    {
+      "doubleSided": true,
+      "emissiveTexture": {
+        "index": 1
+      },
+      "name": "default",
+      "normalTexture": {
+        "index": 2
+      },
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 0
+        },
+        "metallicFactor": 0.0,
+        "roughnessFactor": 0.6
+      }
+    }
+  ],
+  "meshes": [
+    {
+      "name": "Object_0",
+      "primitives": [
+        {
+          "attributes": {
+            "NORMAL": 1,
+            "POSITION": 0,
+            "TANGENT": 2,
+            "TEXCOORD_0": 3
+          },
+          "indices": 4,
+          "material": 0,
+          "mode": 4
+        }
+      ]
+    },
+    {
+      "name": "Object_1",
+      "primitives": [
+        {
+          "attributes": {
+            "NORMAL": 6,
+            "POSITION": 5,
+            "TANGENT": 7,
+            "TEXCOORD_0": 8
+          },
+          "indices": 9,
+          "material": 0,
+          "mode": 4
+        }
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "children": [
+        1
+      ],
+      "matrix": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        2.220446049250313e-16,
+        -1.0,
+        0.0,
+        0.0,
+        1.0,
+        2.220446049250313e-16,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "name": "Sketchfab_model"
+    },
+    {
+      "children": [
+        2,
+        3
+      ],
+      "name": "alliance_statue.obj.cleaner"
+    },
+    {
+      "mesh": 0,
+      "name": "Object_2"
+    },
+    {
+      "mesh": 1,
+      "name": "Object_3"
+    }
+  ],
+  "samplers": [
+    {
+      "magFilter": 9729,
+      "minFilter": 9987,
+      "wrapS": 10497,
+      "wrapT": 10497
+    }
+  ],
+  "scene": 0,
+  "scenes": [
+    {
+      "name": "Sketchfab_Scene",
+      "nodes": [
+        0
+      ]
+    }
+  ],
+  "textures": [
+    {
+      "sampler": 0,
+      "source": 0
+    },
+    {
+      "sampler": 0,
+      "source": 1
+    },
+    {
+      "sampler": 0,
+      "source": 2
+    }
+  ]
+}
